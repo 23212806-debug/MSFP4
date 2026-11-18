@@ -134,7 +134,9 @@ La rama principal está formada por la fuente $V_e(t)$ y el resistor $R_1$. En e
 
 La corriente de entrada se divide en el nodo de salida:
 
-$$F_e(t)=F_C(t)+F_s(t),\qquad F_C(t)=C\,\frac{dV_s(t)}{dt}.$$
+```math
+F_e(t)=F_C(t)+F_s(t),\qquad F_C(t)=C\,\frac{dV_s(t)}{dt}.
+```
 
 ### Correspondencias de la analogía
 
@@ -176,47 +178,69 @@ El desarrollo completo, a mano, se conserva en [`analisis_matematico.pdf`](anali
 
 Ley de corrientes en el nodo de salida y ley de voltajes en la malla de entrada:
 
-$$F_e(t)=F_C(t)+F_s(t),\qquad F_e(t)=\frac{V_e(t)-V_s(t)}{R_1}.$$
+```math
+F_e(t)=F_C(t)+F_s(t),\qquad F_e(t)=\frac{V_e(t)-V_s(t)}{R_1}.
+```
 
 Elementos de almacenamiento y rama de respuesta:
 
-$$F_C(t)=C\,\frac{dV_s(t)}{dt},\qquad V_s(t)=V_L(t)+V_{R_2}(t)=L\,\frac{dF_s(t)}{dt}+R_2F_s(t).$$
+```math
+F_C(t)=C\,\frac{dV_s(t)}{dt},\qquad V_s(t)=V_L(t)+V_{R_2}(t)=L\,\frac{dF_s(t)}{dt}+R_2F_s(t).
+```
 
 ### 2. Modelo de ecuaciones integro-diferenciales
 
 Despejando las variables de los dos elementos independientes de almacenamiento, $V_s(t)$ (capacitor) y $F_s(t)$ (inductor):
 
-$$C\frac{dV_s(t)}{dt}=F_e(t)-F_s(t)\;\Rightarrow\;V_s(t)=V_s(0)+\frac{1}{C}\int_0^t\big[F_e(\tau)-F_s(\tau)\big]\,d\tau,$$
+```math
+C\frac{dV_s(t)}{dt}=F_e(t)-F_s(t)\;\Rightarrow\;V_s(t)=V_s(0)+\frac{1}{C}\int_0^t\big[F_e(\tau)-F_s(\tau)\big]\,d\tau,
+```
 
-$$L\frac{dF_s(t)}{dt}=V_s(t)-R_2F_s(t)\;\Rightarrow\;F_s(t)=F_s(0)+\frac{1}{L}\int_0^t\big[V_s(\tau)-R_2F_s(\tau)\big]\,d\tau,$$
+```math
+L\frac{dF_s(t)}{dt}=V_s(t)-R_2F_s(t)\;\Rightarrow\;F_s(t)=F_s(0)+\frac{1}{L}\int_0^t\big[V_s(\tau)-R_2F_s(\tau)\big]\,d\tau,
+```
 
-$$F_e(t)=\frac{V_e(t)-V_s(t)}{R_1}.$$
+```math
+F_e(t)=\frac{V_e(t)-V_s(t)}{R_1}.
+```
 
-Equivalentemente, en variables de estado, con $\mathbf{x}=\begin{bmatrix}V_s\\F_s\end{bmatrix}$:
+Equivalentemente, en variables de estado, con $`\mathbf{x}=\begin{bmatrix}V_s\\F_s\end{bmatrix}`$:
 
-$$\dot{\mathbf{x}}=\begin{bmatrix}-\dfrac{1}{R_1C}&-\dfrac{1}{C}\\\dfrac{1}{L}&-\dfrac{R_2}{L}\end{bmatrix}\mathbf{x}+\begin{bmatrix}\dfrac{1}{R_1C}\\0\end{bmatrix}V_e(t).$$
+```math
+\dot{\mathbf{x}}=\begin{bmatrix}-\dfrac{1}{R_1C}&-\dfrac{1}{C}\\\dfrac{1}{L}&-\dfrac{R_2}{L}\end{bmatrix}\mathbf{x}+\begin{bmatrix}\dfrac{1}{R_1C}\\0\end{bmatrix}V_e(t).
+```
 
 ### 3. Función de transferencia
 
 Aplicando la transformada de Laplace con condiciones iniciales nulas:
 
-$$\frac{V_e(s)-V_s(s)}{R_1}=CsV_s(s)+\frac{V_s(s)}{Ls+R_2}.$$
+```math
+\frac{V_e(s)-V_s(s)}{R_1}=CsV_s(s)+\frac{V_s(s)}{Ls+R_2}.
+```
 
 Multiplicando por $R_1(Ls+R_2)$ y agrupando términos:
 
-$$V_e(s)\,(Ls+R_2)=V_s(s)\Big[R_1Cs(Ls+R_2)+R_1+(Ls+R_2)\Big],$$
+```math
+V_e(s)\,(Ls+R_2)=V_s(s)\Big[R_1Cs(Ls+R_2)+R_1+(Ls+R_2)\Big],
+```
 
-$$\boxed{G(s)=\frac{V_s(s)}{V_e(s)}=\frac{Ls+R_2}{R_1LC\,s^2+(R_1R_2C+L)\,s+(R_1+R_2)}.}$$
+```math
+\boxed{G(s)=\frac{V_s(s)}{V_e(s)}=\frac{Ls+R_2}{R_1LC\,s^2+(R_1R_2C+L)\,s+(R_1+R_2)}.}
+```
 
 El denominador es un polinomio de **segundo orden** porque el circuito contiene dos elementos de almacenamiento independientes: $C$ y $L$.
 
 ### 4. Funciones de transferencia de control y caso
 
-Sustituyendo $R_1=1\,\mathrm{k\Omega}$ y $L=0.1\,\mathrm{H}$ (con $C$ en farads y $R_2$ en ohmios):
+Sustituyendo $`R_1=1\,\mathrm{k\Omega}`$ y $`L=0.1\,\mathrm{H}`$ (con $C$ en farads y $R_2$ en ohmios):
 
-$$\boxed{G_{\text{control}}(s)=\frac{0.1\,s+100\,000}{0.0001\,s^2+100.1\,s+101\,000}}\qquad(C=1\,\mu\mathrm{F},\;R_2=100\,\mathrm{k\Omega})$$
+```math
+\boxed{G_{\text{control}}(s)=\frac{0.1\,s+100\,000}{0.0001\,s^2+100.1\,s+101\,000}}\qquad(C=1\,\mu\mathrm{F},\;R_2=100\,\mathrm{k\Omega})
+```
 
-$$\boxed{G_{\text{caso}}(s)=\frac{0.1\,s+1\,000}{0.1\,s^2+1\,000.1\,s+2\,000}}\qquad(C=1000\,\mu\mathrm{F},\;R_2=1\,\mathrm{k\Omega})$$
+```math
+\boxed{G_{\text{caso}}(s)=\frac{0.1\,s+1\,000}{0.1\,s^2+1\,000.1\,s+2\,000}}\qquad(C=1000\,\mu\mathrm{F},\;R_2=1\,\mathrm{k\Omega})
+```
 
 Coeficientes del caso: $R_1LC=1000\cdot0.1\cdot10^{-3}=0.1$; $R_1R_2C+L=1000\cdot1000\cdot10^{-3}+0.1=1000.1$; $R_1+R_2=2000$.
 
@@ -233,35 +257,41 @@ Coeficientes del caso: $R_1LC=1000\cdot0.1\cdot10^{-3}=0.1$; $R_1R_2C+L=1000\cdo
 
 Para la entrada escalón unitario $V_e(s)=1/s$, el error es $E(s)=V_e(s)-V_s(s)=\big[1-G(s)\big]V_e(s)$. Por el teorema del valor final:
 
-$$e_{ss}=\lim_{s\to0}sE(s)=1-G(0)=1-\frac{R_2}{R_1+R_2}=\frac{R_1}{R_1+R_2}.$$
+```math
+e_{ss}=\lim_{s\to0}sE(s)=1-G(0)=1-\frac{R_2}{R_1+R_2}=\frac{R_1}{R_1+R_2}.
+```
 
 | Condición | $G(0)=V_s(\infty)$ | $e_{ss}$ |
 |---|---:|---:|
-| Control | $\dfrac{100\,000}{101\,000}=0.990099$ | $0.009901\;(0.99\,\%)$ |
-| Caso | $\dfrac{1000}{2000}=0.5$ | $0.5\;(50\,\%)$ |
+| Control | $`\dfrac{100\,000}{101\,000}=0.990099`$ | $`0.009901\;(0.99\,\%)`$ |
+| Caso | $\dfrac{1000}{2000}=0.5$ | $`0.5\;(50\,\%)`$ |
 
 **Distinción importante:** este $e_{ss}$ mide el seguimiento del escalón unitario por cada sistema por separado. El error que alimenta al PID es distinto: $e(t)=V_{s,\text{control}}(t)-V_{s,\text{caso}}(t)$, y su valor final sin controlador es:
 
-$$e(\infty)=0.990099-0.5=0.490099.$$
+```math
+e(\infty)=0.990099-0.5=0.490099.
+```
 
 > **Nota de verificación:** en el desarrollo manual (página 3) esta resta aparece como $0.498099$; el resultado correcto es **$0.490099$**.
 
 ### 2. Polos y estabilidad
 
-Los polos son las raíces de $R_1LC\,s^2+(R_1R_2C+L)\,s+(R_1+R_2)=0$:
+Los polos son las raíces de $`R_1LC\,s^2+(R_1R_2C+L)\,s+(R_1+R_2)=0`$:
 
-$$s_{1,2}=\frac{-(R_1R_2C+L)\pm\sqrt{(R_1R_2C+L)^2-4R_1LC(R_1+R_2)}}{2R_1LC}.$$
+```math
+s_{1,2}=\frac{-(R_1R_2C+L)\pm\sqrt{(R_1R_2C+L)^2-4R_1LC(R_1+R_2)}}{2R_1LC}.
+```
 
 | Magnitud | Control | Caso |
 |---|---:|---:|
 | Polo $s_1$ (rad/s) | $-1010.0101$ | $-2.0002$ |
-| Polo $s_2$ (rad/s) | $-999\,989.9899$ | $-9998.9998$ |
-| Cero $z=-R_2/L$ (rad/s) | $-1\,000\,000$ | $-10\,000$ |
+| Polo $s_2$ (rad/s) | $`-999\,989.9899`$ | $-9998.9998$ |
+| Cero $z=-R_2/L$ (rad/s) | $`-1\,000\,000`$ | $`-10\,000`$ |
 | Constante de tiempo dominante $\tau=1/\lvert s_1\rvert$ | 0.990 ms | 0.4999 s |
 | $\omega_n=\sqrt{(R_1+R_2)/(R_1LC)}$ (rad/s) | 31 780 | 141.42 |
 | $\zeta=\dfrac{R_1R_2C+L}{2\sqrt{R_1LC(R_1+R_2)}}$ | 15.75 | 35.36 |
 
-Ambos sistemas tienen **polos reales, distintos y en el semiplano izquierdo**, por lo que son **asintóticamente estables** y **sobreamortiguados** ($\zeta>1$). En ambos casos el cero queda prácticamente superpuesto con el polo rápido (control: $-10^6$ frente a $-999\,990$; caso: $-10\,000$ frente a $-9999$), de modo que cada respuesta se comporta, en la práctica, como un sistema de **primer orden** gobernado por su polo dominante.
+Ambos sistemas tienen **polos reales, distintos y en el semiplano izquierdo**, por lo que son **asintóticamente estables** y **sobreamortiguados** ($\zeta>1$). En ambos casos el cero queda prácticamente superpuesto con el polo rápido (control: $-10^6$ frente a $`-999\,990`$; caso: $`-10\,000`$ frente a $-9999$), de modo que cada respuesta se comporta, en la práctica, como un sistema de **primer orden** gobernado por su polo dominante.
 
 **Efecto de $R_2$ y $C$:** el aumento de $C$ (1 µF → 1000 µF) y la disminución de $R_2$ desplazan el polo dominante de $-1010$ a $-2.0$ rad/s. La respuesta del caso es unas 500 veces más lenta que la del control y se estabiliza en un valor menor.
 
@@ -294,13 +324,15 @@ Las siguientes cifras se obtuvieron de las funciones de transferencia anteriores
 
 La práctica utiliza un **escalón unitario** que representa un estímulo sostenido aplicado al sistema:
 
-$$V_e(t)=u(t),\qquad 0\le t\le10\,\mathrm{s}.$$
+```math
+V_e(t)=u(t),\qquad 0\le t\le10\,\mathrm{s}.
+```
 
 | Elemento | Configuración o definición | Propósito |
 |---|---|---|
 | Entrada $V_e(t)$ | Escalón unitario | Representar un estímulo hormonal sostenido |
-| Condición control | $C=1\,\mu\mathrm{F}$, $R_2=100\,\mathrm{k\Omega}$ | Respuesta de referencia |
-| Condición caso | $C=1000\,\mu\mathrm{F}$, $R_2=1\,\mathrm{k\Omega}$ | Condición alterada |
+| Condición control | $`C=1\,\mu\mathrm{F}`$, $`R_2=100\,\mathrm{k\Omega}`$ | Respuesta de referencia |
+| Condición caso | $`C=1000\,\mu\mathrm{F}`$, $`R_2=1\,\mathrm{k\Omega}`$ | Condición alterada |
 | Sistema controlado | Caso con PID | Reducir la diferencia respecto al control |
 | Tiempo | 0–10 s | Comparar la evolución temporal |
 | Condiciones iniciales | $V_s(0)=0$, $F_s(0)=0$ | Respuesta forzada |
@@ -337,11 +369,15 @@ Las tres representaciones deben producir respuestas consistentes bajo las mismas
 
 El esquema general de la **Figura 5.5** del instructivo utiliza la respuesta del individuo sano como referencia para el caso. La señal de error se define como:
 
-$$\boxed{e(t)=V_{s,\text{control}}(t)-V_{s,\text{caso}}(t).}$$
+```math
+\boxed{e(t)=V_{s,\text{control}}(t)-V_{s,\text{caso}}(t).}
+```
 
 La ley de control PID ideal y su función de transferencia son:
 
-$$u(t)=k_Pe(t)+k_I\int_0^te(\tau)\,d\tau+k_D\frac{de(t)}{dt},\qquad K(s)=k_P+\frac{k_I}{s}+k_Ds.$$
+```math
+u(t)=k_Pe(t)+k_I\int_0^te(\tau)\,d\tau+k_D\frac{de(t)}{dt},\qquad K(s)=k_P+\frac{k_I}{s}+k_Ds.
+```
 
 El controlador produce la señal de tratamiento que se aplica al caso para aproximar su respuesta a la del control. La estructura exacta del lazo debe verificarse en [`sistema1.slx`](sistema1.slx).
 
@@ -698,3 +734,4 @@ El README distingue entre **expresiones del instructivo**, **cálculos analític
 ## Uso académico
 
 Este repositorio documenta la **Práctica 4: Modelado y control del sistema endócrino**. El procedimiento se fundamenta en el instructivo de la asignatura y en los archivos de MATLAB/Simulink proporcionados. Su propósito es desarrollar habilidades de interpretación fisiológica, modelado mediante analogías eléctricas, simulación, sintonización de controladores, implementación analógica y verificación experimental. El modelo es fenomenológico, las intervenciones son *in silico* y de laboratorio con circuitos electrónicos, y cualquier cambio de parámetros, estructura o procedimiento debe identificarse y justificarse.
+
