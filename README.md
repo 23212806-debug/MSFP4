@@ -1,3 +1,5 @@
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=23212806-debug/MSFP4)
+
 # Práctica 4 — Modelado y control del sistema endocrino
 
 Repositorio académico de la asignatura **Modelado de Sistemas Fisiológicos**, correspondiente al programa de **Ingeniería Biomédica** del Tecnológico Nacional de México / Instituto Tecnológico de Tijuana. Esta práctica integra modelado matemático fenomenológico, analogías eléctricas de sistemas fisiológicos, representación esquemática biológica, análisis temporal y de estabilidad, diseño y sintonización de controladores PID, simulación computacional multiferramienta y comprobación experimental.
@@ -332,14 +334,12 @@ $$
 
 ### 2. Ganancias sintonizadas
 
-Mediante la herramienta **PID Tuner** de Simulink y su validación en Python, se obtuvieron los siguientes conjuntos de parámetros que logran el seguimiento de trayectoria con sobreimpulso mínimo y error estacionario nulo:
+Mediante la herramienta **PID Tuner** de Simulink (evidencia resguardada en [`controlador_PID.png`](controlador_PID.png)) y su validación en Python, se obtuvieron los siguientes conjuntos de parámetros que logran el seguimiento de trayectoria con sobreimpulso mínimo y error estacionario nulo:
 
 | Entorno de simulación | $k_P$ | $k_I$ | $k_D$ | Observaciones de implementación |
 |---|---:|---:|---:|---|
 | **Simulink (`sistema1.slx`)** | $1292.1889$ | $309\,191.9526$ | $0.17968$ | PID paralelo continuo con filtro derivativo $N = 4938.6985$ |
 | **Python (`Martinez23212806.py`)** | $13\,209.9564$ | $32\,316\,525.9285$ | $0.18118$ | Implementación ideal de función de transferencia $K(s)$ |
-
-![Sintonización del controlador PID](controlador_PID.png)
 
 ### 3. Síntesis del controlador analógico
 
@@ -398,15 +398,8 @@ El script [`Martinez23212806.py`](Martinez23212806.py), desarrollado en **Visual
 |---|---|---|
 | **MATLAB / Simulink** | [`grafica_MATLAB.pdf`](grafica_MATLAB.pdf) | Comparación de $V_e(t)$, $V_{s,\text{control}}(t)$, $V_{s,\text{caso}}(t)$ y $V_{s,\text{PID}}(t)$ desde `Martinez23212806.mlx` |
 | **Python** | [`grafica_PYTHON.png`](grafica_PYTHON.png) | Simulación independiente de las respuestas en lazo abierto y lazo cerrado con PID |
+| **Sintonización PID** | [`controlador_PID.png`](controlador_PID.png) | Captura de sintonización del bloque `PID Controller` en Simulink |
 | **Laboratorio** | [`grafica_LABORATORIO.jpeg`](grafica_LABORATORIO.jpeg) | Captura experimental obtenida en el osciloscopio del montaje físico |
-
-#### Simulación numérica en Python (`grafica_PYTHON.png`)
-
-![Simulación numérica en Python](grafica_PYTHON.png)
-
-#### Medición experimental en osciloscopio (`grafica_LABORATORIO.jpeg`)
-
-![Medición experimental en osciloscopio](grafica_LABORATORIO.jpeg)
 
 ### Discusión de resultados
 
