@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: >-
+  Práctica 3: Modelado y control del sistema musculoesquelético
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Pedro Damian
+    family-names: Martinez Lozano
+    email: 23212806@tectijuana.edu.mx
+    affiliation: TecNM / IT Tijuana
+repository-code: 'https://github.com/23212806-debug/MSFP3'
+keywords:
+  - Sistema musculoesquelético
+  - Atrofia muscular
+  - Analogía fuerza-voltaje
+  - Circuito RC
+  - MATLAB/Simulink
+  - Simscape Electrical
+  - Python
+  - Control PID
+version: '1.0'
