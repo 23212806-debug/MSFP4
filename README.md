@@ -1,21 +1,21 @@
 [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=23212806-debug/MSFP4)
 
-# Práctica 4 — Modelado y control del sistema endocrino
+# Práctica 4 — Modelado y control del sistema endócrino
 
-Repositorio académico de la asignatura **Modelado de Sistemas Fisiológicos**, correspondiente al programa de **Ingeniería Biomédica** del Tecnológico Nacional de México / Instituto Tecnológico de Tijuana. Esta práctica integra modelado matemático fenomenológico, analogías eléctricas de sistemas fisiológicos, representación esquemática biológica, análisis temporal y de estabilidad, diseño y sintonización de controladores PID, simulación computacional multiferramienta y comprobación experimental.
+Repositorio académico de la asignatura **Modelado de Sistemas Fisiológicos**, correspondiente al programa de **Ingeniería Biomédica** del Tecnológico Nacional de México / Instituto Tecnológico de Tijuana. Esta práctica integra interpretación fisiológica, analogías eléctricas, modelado matemático de segundo orden, análisis temporal y de estabilidad, diseño de controladores PID, verificación mediante simulación computacional y contraste con experimentación en el Laboratorio de Electrónica.
 
-El caso de estudio representa la dinámica de **secreción, transporte, almacenamiento y respuesta hormonal del sistema endocrino** mediante un circuito **RLC de segundo orden** con topología mixta. Se compara el comportamiento dinámico de un individuo sano (**Control**) frente a una condición fisiológica alterada (**Caso**), diseñando un controlador PID que utiliza la respuesta del individuo sano como señal de referencia para corregir la respuesta del paciente tanto *in silico* como en el laboratorio.
+El caso de estudio representa de forma **fenomenológica y simplificada** los procesos de secreción, transporte, almacenamiento y respuesta hormonal mediante un circuito RLC equivalente. Se compara una condición de referencia (**control**) con una condición alterada (**caso**), obtenida al modificar simultáneamente la capacitancia $C$ y la resistencia $R_2$, y se propone una estrategia de control *in silico* para reducir la diferencia entre ambas respuestas.
 
 **Docente:** Dr. Paul Antonio Valle Trujillo  
 **Correo:** paul.valle@tectijuana.edu.mx  
 **Departamento:** Ingeniería Eléctrica y Electrónica  
 **Institución:** Tecnológico Nacional de México / Instituto Tecnológico de Tijuana  
-**Asignatura:** Modelado de Sistemas Fisiológicos (`IBF-1020`)  
+**Asignatura:** Modelado de Sistemas Fisiológicos  
 **Programa:** Ingeniería Biomédica  
-**Estudiante:** Pedro Damian Martinez Lozano · `23212806` · `23212806@tectijuana.edu.mx`
+**Estudiante:** Martínez Lozano Pedro Damián · 23212806 · 23212806@tectijuana.edu.mx
 
 **Repositorio de la asignatura:** https://github.com/DrPaulValle/MSF-IBF1020  
-**Sede:** Blvd. Alberto Limón Padilla s/n, Tijuana, C.P. 22454, B.C., México.
+**Sede:** Blvd. Alberto Limón Padilla s/n, Tijuana, C. P. 22454, B. C., México.
 
 ---
 
@@ -25,15 +25,15 @@ El caso de estudio representa la dinámica de **secreción, transporte, almacena
 1. [Resumen](#resumen)
 2. [Competencia y objetivos](#objetivos)
 3. [Relación con el temario](#temario)
-4. [Modelo físico y analogía eléctrica](#analogia)
-5. [Diagrama biológico del sistema endocrino](#biologico)
-6. [Formulación matemática](#modelo)
-7. [Análisis temporal y de estabilidad](#analisis)
-8. [Señales de entrada y condiciones de simulación](#senales)
-9. [Implementación en MATLAB, Simulink y Simscape](#matlab)
-10. [Control en lazo cerrado y sintonización PID](#pid)
-11. [Reproducción en Python](#python)
-12. [Controlador analógico y laboratorio](#laboratorio)
+4. [Interpretación fisiológica y analogía eléctrica](#analogia)
+5. [Formulación matemática](#modelo)
+6. [Análisis temporal y de estabilidad](#analisis)
+7. [Señales de entrada y condiciones de simulación](#senales)
+8. [Implementación en MATLAB, Simulink y Simscape](#matlab)
+9. [Control en lazo cerrado y sintonización PID](#pid)
+10. [Reproducción en Python](#python)
+11. [Diagrama biológico e interpretación fisiológica](#biologico)
+12. [Implementación experimental en el laboratorio](#laboratorio)
 13. [Resultados y verificación cruzada](#resultados)
 14. [Flujo de trabajo](#flujo)
 15. [Actividades del estudiante](#actividades)
@@ -47,13 +47,13 @@ El caso de estudio representa la dinámica de **secreción, transporte, almacena
 <a id="resumen"></a>
 ## Resumen
 
-Esta práctica tiene como propósito **formular, modelar, simular, controlar y validar experimentalmente** un sistema fisiológico endocrino simplificado mediante analogías eléctricas. A partir de una descripción funcional de los procesos de secreción hormonal, transporte vascular, almacenamiento compartimental y retardo de respuesta en el tejido diana, se propone un circuito eléctrico de segundo orden compuesto por dos resistores ($R_1, R_2$), un capacitor ($C$) y un inductor ($L$).
+La práctica tiene como propósito **reproducir un procedimiento de modelado, análisis, simulación, control y verificación experimental** aplicado a una descripción simplificada del sistema endócrino. Un estímulo fisiológico $V_e(t)$ inicia la secreción hormonal; la hormona se transporta con pérdidas (resistencia $R_1$), se acumula temporalmente en un compartimento (capacitancia $C$) y produce una respuesta en el tejido diana, representada por una rama serie formada por una inductancia $L$ y una resistencia $R_2$. La salida $V_s(t)$ representa el nivel hormonal efectivo y normalizado disponible para producir una respuesta.
 
-Mediante las leyes de Kirchhoff y la transformada de Laplace se obtienen las ecuaciones integro-diferenciales y las funciones de transferencia correspondientes a dos condiciones fisiológicas: una condición de referencia saludable (**Control**) y una condición alterada (**Caso**), generada al modificar simultáneamente la capacidad de almacenamiento compartimental ($C$) y la resistencia de utilización o eliminación hormonal ($R_2$). Se evalúan el error en estado estacionario y la estabilidad a través de la ubicación de los polos en el plano complejo.
+Debido a la presencia de **dos elementos independientes de almacenamiento de energía** ($C$ y $L$), el circuito constituye un **sistema dinámico de segundo orden**. Se analizan dos condiciones: control y caso. La entrada es un **escalón unitario** $V_e(t)=u(t)$ en $t\in[0,10]$ s. Posteriormente se incorpora un **controlador PID** que toma la respuesta del control como referencia, y sus ganancias $k_P$, $k_I$ y $k_D$ se utilizan para calcular un controlador analógico con amplificadores operacionales.
 
-Posteriormente, se implementa un **controlador PID con retroalimentación negativa** cuyo objetivo es lograr que la salida del paciente ($V_{s,\text{PID}}(t)$) siga la trayectoria dinámica del individuo sano ($V_{s,\text{control}}(t)$) ante una entrada escalón unitario. Las simulaciones se verifican de manera cruzada en **MATLAB/Simulink** (ecuaciones integro-diferenciales y función de transferencia), **Simscape Electrical** (circuito físico) y **Python**, culminando con el montaje físico en protoboard y la medición experimental mediante osciloscopio.
+El modelo **no representa un eje hormonal específico** ni establece una equivalencia directa entre los valores de los componentes eléctricos y parámetros fisiológicos medidos. Su finalidad es reproducir cualitativamente propiedades dinámicas como almacenamiento, disipación, retardo e inercia de la respuesta. El controlador constituye una estrategia académica y **no una intervención terapéutica**.
 
-**Palabras clave:** sistema endocrino; circuito RLC; controlador PID; analogía eléctrica; modelado de sistemas fisiológicos; MATLAB; Simulink; Simscape Electrical; Python; instrumentación biomédica.
+**Palabras clave:** sistema endócrino; secreción hormonal; analogía eléctrica; circuito RLC; sistema de segundo orden; función de transferencia; controlador PID; MATLAB; Simulink; Simscape Electrical; Python; controlador analógico.
 
 [Volver al contenido](#contenido)
 
@@ -64,22 +64,24 @@ Posteriormente, se implementa un **controlador PID con retroalimentación negati
 
 ### Competencia a desarrollar
 
-Modelar sistemas fisiológicos mediante analogías eléctricas, ecuaciones diferenciales y funciones de transferencia para analizar su comportamiento dinámico y diseñar estrategias de control clásico, contrastando los resultados entre el análisis matemático, la simulación computacional y la experimentación en el Laboratorio de Electrónica.
+Modelizar sistemas fisiológicos mediante analogías eléctricas, ecuaciones diferenciales y funciones de transferencia para analizar su comportamiento dinámico y diseñar estrategias de control mediante técnicas de control clásico. En particular, interpretar una descripción simplificada de los procesos de secreción, transporte, almacenamiento y respuesta hormonal para proponer un circuito eléctrico equivalente de segundo orden; comparar una condición de referencia (control) con una condición alterada (caso); diseñar un controlador PID y contrastar los resultados mediante modelado analítico, simulación computacional y experimentación en el Laboratorio de Electrónica.
 
 ### Objetivo general
 
-Proponer, analizar y validar un circuito eléctrico equivalente de segundo orden para representar la dinámica hormonal del sistema endocrino en condiciones normales (**Control**) y alteradas (**Caso**), diseñando un controlador PID que reduzca el error entre ambas respuestas y comprobando los resultados mediante simulación y montaje experimental.
+Modelar, simular y controlar un sistema endócrino simplificado mediante su circuito eléctrico equivalente de segundo orden, identificar las diferencias dinámicas entre las condiciones de control y caso, y evaluar una estrategia de control PID utilizando MATLAB/Simulink, Simscape Electrical, Python y su implementación experimental.
 
 ### Objetivos específicos
 
-- Interpretar la descripción funcional del eje endocrino para construir la topología del circuito equivalente, identificando entradas, salidas, flujos y nodos principales.
-- Relacionar los elementos del circuito equivalente con las estructuras y procesos fisiológicos del sistema endocrino mediante un diagrama biológico.
-- Obtener las ecuaciones integro-diferenciales y las funciones de transferencia $G_{\text{control}}(s)$ y $G_{\text{caso}}(s)$ mediante las leyes de Kirchhoff y la transformada de Laplace.
-- Calcular el error en estado estacionario ante una entrada escalón unitario y determinar la estabilidad de ambos sistemas mediante sus polos.
-- Implementar y contrastar tres representaciones equivalentes en MATLAB/Simulink: ecuaciones integro-diferenciales, función de transferencia y circuito físico en Simscape Electrical.
-- Diseñar y sintonizar un controlador PID en lazo cerrado tomando la respuesta del individuo sano ($V_{s,\text{control}}(t)$) como señal de referencia para el paciente.
-- Reproducir de forma independiente las respuestas en lazo abierto y cerrado en Python y verificar su concordancia con MATLAB/Simulink.
-- Calcular los valores comerciales de resistores y capacitores para implementar el controlador PID con amplificadores operacionales y validar el sistema en el laboratorio.
+- Construir el circuito equivalente identificando $V_e(t)$, $V_s(t)$, $R_1$, $C$, $L$, $R_2$, $F_e(t)$, $F_s(t)$, los nodos principales y la referencia.
+- Obtener $G(s)=V_s(s)/V_e(s)$ para control y caso, y relacionar su orden con los elementos $C$ y $L$.
+- Calcular el error en estado estacionario, los polos y la estabilidad de ambas condiciones.
+- Bosquejar cualitativamente las respuestas al escalón y compararlas con las simulaciones.
+- Formular el modelo mediante ecuaciones integro-diferenciales aplicando las leyes de Kirchhoff.
+- Implementar el sistema por ecuaciones, función de transferencia y Simscape Electrical, y comparar sus respuestas en $t\in[0,10]$ s.
+- Incorporar un controlador PID, registrar $k_P$, $k_I$ y $k_D$ obtenidas con **Tune** y diseñar su versión analógica con amplificadores operacionales.
+- Reproducir las respuestas en Python y contrastarlas con las de MATLAB/Simulink.
+- Construir en protoboard los circuitos de control y caso, y comparar las respuestas experimentales con las simuladas.
+- Relacionar los elementos del modelo con estructuras fisiológicas y documentar los resultados en GitHub.
 
 [Volver al contenido](#contenido)
 
@@ -88,64 +90,78 @@ Proponer, analizar y validar un circuito eléctrico equivalente de segundo orden
 <a id="temario"></a>
 ## Relación con el temario
 
-La práctica integra contenidos correspondientes a las tres unidades fundamentales de la asignatura **Modelado de Sistemas Fisiológicos (`IBF-1020`)**:
+La práctica retoma conceptos de tres áreas de la asignatura **Modelado de Sistemas Fisiológicos (IBF-1020)**:
 
 | Unidad | Área | Contenidos aplicados |
 |---|---|---|
-| I | Sistemas de control retroalimentados | Diagramas de bloques, seguimiento de trayectoria de referencia, análisis de error en estado estacionario y estabilidad por ubicación de polos |
-| II | Modelado matemático | Analogía circuito–sistema endocrino, leyes de Kirchhoff, ecuaciones integro-diferenciales y funciones de transferencia de segundo orden |
-| III | Controladores | Diseño de controlador PID, sintonización mediante *PID Tuner* y síntesis analógica con amplificadores operacionales |
+| I | Sistemas de control retroalimentados | Comparación de respuestas control/caso, definición del error $e(t)$ y retroalimentación |
+| II | Modelado matemático | Analogía eléctrica, leyes de Kirchhoff, ecuaciones integro-diferenciales y función de transferencia de segundo orden |
+| III | Controladores | Control PID, sintonización con Tune, implementación analógica y análisis de respuesta en lazo cerrado |
+
+El enfoque integra **Ingeniería de Control, Electrónica, Ciencias de la Computación y Fisiología Endócrina**, vinculando procesos de secreción, transporte, almacenamiento y respuesta hormonal con un modelo dinámico simplificado.
 
 [Volver al contenido](#contenido)
 
 ---
 
 <a id="analogia"></a>
-## Modelo físico y analogía eléctrica
+## Interpretación fisiológica y analogía eléctrica
 
-El sistema endocrino se representa de forma fenomenológica mediante un circuito eléctrico de segundo orden. La topología consta de una rama principal de entrada formada por la fuente de voltaje $V_e(t)$ en serie con el resistor $R_1$. En el nodo posterior a $R_1$ —donde se mide el voltaje de salida $V_s(t)$— se conecta un capacitor $C$ hacia la referencia eléctrica, en paralelo con una rama serie formada por el inductor $L$ y el resistor $R_2$ conectados también a referencia.
+### Hipótesis del modelo
 
-### Correspondencia de variables y componentes
+1. Un estímulo fisiológico (neural, metabólico u homeostático) inicia la secreción hormonal y se representa mediante la fuente de voltaje $V_e(t)$.
+2. El transporte de la hormona desde la glándula hasta el compartimento de efecto puede presentar retrasos, pérdidas o eliminación; esta oposición se representa mediante la resistencia $R_1$.
+3. Parte de la señal hormonal se acumula temporalmente antes de ser utilizada o eliminada; esta capacidad de almacenamiento se representa mediante la capacitancia $C$.
+4. La respuesta del tejido diana no es instantánea; la oposición a cambios rápidos y el retardo se representan mediante una rama serie formada por la inductancia $L$ y la resistencia $R_2$.
+5. El flujo de secreción y transporte se representa mediante $F_e(t)$ y el flujo asociado con la utilización o respuesta del órgano diana mediante $F_s(t)$.
+6. La salida $V_s(t)$ representa el nivel efectivo y normalizado de la señal hormonal disponible en el compartimento de interés.
 
-| Variable / Proceso fisiológico | Representación eléctrica | Interpretación dentro del modelo |
+### Topología del circuito equivalente
+
+La rama principal está formada por la fuente $V_e(t)$ y el resistor $R_1$. En el nodo posterior a $R_1$ se conecta el capacitor $C$ hacia la referencia, en paralelo con la rama serie $L$–$R_2$. La variable $V_s(t)$ se mide en el nodo de unión entre $R_1$, $C$ y $L$.
+
+```text
+             R1            Vs(t)
+   ┌───────/\/\/\────────●──────────┐
+   │     ──► F_e(t)       │          │
+  (+)                    ─┴─ C       L
+  Ve(t)                  ─┬─         │  ──► F_s(t)
+  (−)                     │          R2
+   │                      │          │
+   └──────────────────────┴──────────┘
+               referencia (tierra)
+```
+
+La corriente de entrada se divide en el nodo de salida:
+
+$$F_e(t)=F_C(t)+F_s(t),\qquad F_C(t)=C\,\frac{dV_s(t)}{dt}.$$
+
+### Correspondencias de la analogía
+
+| Variable o proceso fisiológico | Representación eléctrica | Interpretación dentro del modelo |
 |---|---|---|
-| Estímulo para la secreción hormonal | $V_e(t)$ | Voltaje de entrada que activa la secreción glandular (estímulo neural, metabólico u homeostático) |
-| Flujo de secreción y transporte hormonal | $F_e(t)$ | Corriente eléctrica que circula por $R_1$ desde la fuente hacia el compartimento de respuesta |
-| Pérdidas y oposición durante el transporte | $R_1$ | Resistencia fenomenológica asociada a retrasos o pérdidas en la circulación |
-| Acumulación temporal de hormona | $C$ | Capacitancia que modela el almacenamiento transitorio antes de su utilización o eliminación |
-| Retardo o inercia de respuesta del tejido diana | $L$ | Inductancia que representa la oposición dinámica a cambios bruscos en la respuesta celular |
-| Utilización o eliminación en tejido diana | $R_2$ | Resistencia efectiva asociada al consumo o aclaramiento hormonal en el órgano blanco |
-| Flujo de respuesta del tejido diana | $F_s(t)$ | Corriente eléctrica que circula por la rama serie $L$-$R_2$ |
-| Nivel hormonal efectivo disponible | $V_s(t)$ | Voltaje de salida medido en el nodo común entre $R_1$, $C$ y $L$ |
+| Estímulo para la secreción hormonal | $V_e(t)$ | Señal de entrada que activa la respuesta del sistema |
+| Flujo de secreción y transporte hormonal | $F_e(t)$ | Corriente asociada con la transferencia de la señal desde la fuente hacia el compartimento de respuesta |
+| Pérdidas y oposición durante el transporte | $R_1$ | Procesos que reducen o retardan la transmisión de la señal hormonal |
+| Acumulación temporal de hormona | $C$ | Capacidad de almacenar temporalmente la señal hormonal |
+| Retardo o inercia de la respuesta del tejido diana | $L$ | Resistencia dinámica a cambios rápidos en la respuesta hormonal |
+| Utilización, disipación o eliminación de la señal | $R_2$ | Oposición asociada con la utilización o desaparición de la señal en el compartimento de respuesta |
+| Flujo asociado con la respuesta del tejido diana | $F_s(t)$ | Corriente de la rama que representa la respuesta del órgano diana |
+| Nivel hormonal efectivo | $V_s(t)$ | Variable de salida normalizada |
 
-### Parámetros comerciales para Control y Caso
+### Parámetros de los circuitos (valores comerciales)
 
-La modificación simultánea de la capacitancia $C$ y de la resistencia de utilización $R_2$ permite contrastar la dinámica de un individuo sano (**Control**) frente a una condición fisiológica alterada (**Caso**):
-
-| Componente | Condición Control (Sano) | Condición Caso (Paciente) | Efecto fisiológico modelado |
+| Componente | Control | Caso | Unidad |
 |---|---:|---:|---|
-| $R_1$ | $1\,\mathrm{k}\Omega$ | $1\,\mathrm{k}\Omega$ | Oposición basal al transporte hormonal constante |
-| $L$ | $100\,\mathrm{mH}$ | $100\,\mathrm{mH}$ | Inercia basal de respuesta del tejido diana |
-| $C$ | $1\,\mu\mathrm{F}$ | $1000\,\mu\mathrm{F}$ | Incremento en el almacenamiento compartimental |
-| $R_2$ | $100\,\mathrm{k}\Omega$ | $1\,\mathrm{k}\Omega$ | Aumento en la tasa de eliminación o resistencia a la acción hormonal |
+| $R_1$ | 1 | 1 | kΩ |
+| $L$ | 100 | 100 | mH |
+| $C$ | 1 | 1000 | µF |
+| $R_2$ | 100 | 1 | kΩ |
+| $V_e(t)$ | $u(t)$ | $u(t)$ | V |
 
-> **Alcance de la analogía:** los valores seleccionados corresponden a componentes comerciales estándar para su emulación en Simscape Electrical y montaje físico en protoboard. Conservan la estructura matemática del fenómeno fisiológico, sin constituir una conversión numérica directa de concentraciones plasmáticas.
+**Condiciones del modelo:** $R_1$ y $L$ permanecen constantes. La modificación simultánea de $C$ (de 1 µF a 1000 µF) y de $R_2$ (de 100 kΩ a 1 kΩ) produce una dinámica distinta entre control y caso, y permite analizar el efecto de las propiedades de almacenamiento y disipación sobre la respuesta temporal.
 
-[Volver al contenido](#contenido)
-
----
-
-<a id="biologico"></a>
-## Diagrama biológico del sistema endocrino
-
-Para vincular el modelo matemático y la topología eléctrica con la fisiología real, se elaboró un esquema conceptual en **BioRender** que ilustra la correspondencia entre el eje glandular–vascular–órgano diana y los parámetros del circuito equivalente bajo las condiciones **Control** y **Caso**:
-
-![Diagrama biológico del sistema endocrino](biorender.png)
-
-* **Estímulo y secreción glandular ($V_e(t)$ y $F_e(t)$):** un estímulo homeostático o neuroendocrino activa la glándula endocrina, generando un flujo secretor inicial hacia el torrente sanguíneo.
-* **Transporte vascular ($R_1$):** representa la resistencia hidrodinámica y las pérdidas metabólicas durante el trayecto circulatorio hacia el tejido blanco.
-* **Compartimento de distribución y almacenamiento ($C$):** modela la retención temporal de la hormona en el espacio intersticial o plasmático. En la condición **Caso** ($C = 1000\,\mu\mathrm{F}$), el secuestro compartimental aumenta drásticamente, retardando la disponibilidad de la señal.
-* **Inercia de señalización y captación en órgano diana ($L$ y $R_2$):** el inductor $L$ refleja el retardo bioquímico en la cascada de segundos mensajeros tras la unión hormona-receptor, mientras que $R_2$ representa la tasa efectiva de utilización o aclaramiento celular (reducida a $1\,\mathrm{k}\Omega$ en el **Caso**, lo que disminuye el nivel hormonal efectivo $V_s(t)$).
+> **Alcance de la analogía:** las unidades y los valores de los componentes eléctricos no representan directamente magnitudes fisiológicas del sistema endócrino. Es una analogía fenomenológica con fines académicos.
 
 [Volver al contenido](#contenido)
 
@@ -154,73 +170,57 @@ Para vincular el modelo matemático y la topología eléctrica con la fisiologí
 <a id="modelo"></a>
 ## Formulación matemática
 
-El desarrollo analítico completo manuscrito se encuentra documentado en [`analisis_matematico.pdf`](analisis_matematico.pdf).
+El desarrollo completo, a mano, se conserva en [`analisis_matematico.pdf`](analisis_matematico.pdf). A continuación se presenta la versión depurada, con condiciones iniciales nulas.
 
-### 1. Ecuaciones integro-diferenciales
+### 1. Relaciones constitutivas y leyes de Kirchhoff
 
-Aplicando la ley de corrientes de Kirchhoff (LCK) en el nodo de salida $V_s(t)$ y la ley de voltajes de Kirchhoff (LVK) en las mallas de entrada y de respuesta, se plantean las ecuaciones principales:
+Ley de corrientes en el nodo de salida y ley de voltajes en la malla de entrada:
 
-$$
-F_e(t) = F_C(t) + F_s(t),
-$$
+$$F_e(t)=F_C(t)+F_s(t),\qquad F_e(t)=\frac{V_e(t)-V_s(t)}{R_1}.$$
 
-donde cada flujo está definido por:
+Elementos de almacenamiento y rama de respuesta:
 
-$$
-F_e(t) = \frac{V_e(t) - V_s(t)}{R_1}, \qquad F_C(t) = C\frac{dV_s(t)}{dt}, \qquad V_s(t) = L\frac{dF_s(t)}{dt} + R_2 F_s(t).
-$$
+$$F_C(t)=C\,\frac{dV_s(t)}{dt},\qquad V_s(t)=V_L(t)+V_{R_2}(t)=L\,\frac{dF_s(t)}{dt}+R_2F_s(t).$$
 
-Despejando las variables de integración y los flujos para la construcción del diagrama de bloques en Simulink (`V(t) Control` y `V(t) Caso`), se obtiene el sistema equivalente:
+### 2. Modelo de ecuaciones integro-diferenciales
 
-$$
-V_s(t) = V_s(0) + \frac{1}{C}\int_{0}^{t} \left[F_e(\tau) - F_s(\tau)\right] d\tau,
-$$
+Despejando las variables de los dos elementos independientes de almacenamiento, $V_s(t)$ (capacitor) y $F_s(t)$ (inductor):
 
-$$
-F_s(t) = \frac{1}{R_2}\left[V_s(t) - L\frac{dF_s(t)}{dt}\right], \qquad V_s(t) = L\frac{dF_s(t)}{dt} + R_2 F_s(t).
-$$
+$$C\frac{dV_s(t)}{dt}=F_e(t)-F_s(t)\;\Rightarrow\;V_s(t)=V_s(0)+\frac{1}{C}\int_0^t\big[F_e(\tau)-F_s(\tau)\big]\,d\tau,$$
 
-### 2. Función de transferencia
+$$L\frac{dF_s(t)}{dt}=V_s(t)-R_2F_s(t)\;\Rightarrow\;F_s(t)=F_s(0)+\frac{1}{L}\int_0^t\big[V_s(\tau)-R_2F_s(\tau)\big]\,d\tau,$$
 
-Considerando condiciones iniciales nulas y aplicando la transformada de Laplace al balance nodal:
+$$F_e(t)=\frac{V_e(t)-V_s(t)}{R_1}.$$
 
-$$
-\frac{V_e(s) - V_s(s)}{R_1} = Cs V_s(s) + \frac{V_s(s)}{Ls + R_2}.
-$$
+Equivalentemente, en variables de estado, con $\mathbf{x}=\begin{bmatrix}V_s\\F_s\end{bmatrix}$:
 
-Agrupando los términos de $V_s(s)$ y resolviendo el cociente salida-entrada se obtiene la función de transferencia general:
+$$\dot{\mathbf{x}}=\begin{bmatrix}-\dfrac{1}{R_1C}&-\dfrac{1}{C}\\\dfrac{1}{L}&-\dfrac{R_2}{L}\end{bmatrix}\mathbf{x}+\begin{bmatrix}\dfrac{1}{R_1C}\\0\end{bmatrix}V_e(t).$$
 
-$$
-\boxed{G(s) = \frac{V_s(s)}{V_e(s)} = \frac{Ls + R_2}{R_1 L C s^2 + (R_1 R_2 C + L)s + (R_1 + R_2)}.}
-$$
+### 3. Función de transferencia
 
-El denominador es de **segundo grado** debido a los dos elementos independientes de almacenamiento de energía ($C$ y $L$), y presenta un cero finito en $s = -R_2/L$.
+Aplicando la transformada de Laplace con condiciones iniciales nulas:
 
-Sustituyendo los valores comerciales de cada condición se obtienen las funciones de transferencia específicas:
+$$\frac{V_e(s)-V_s(s)}{R_1}=CsV_s(s)+\frac{V_s(s)}{Ls+R_2}.$$
 
-- **Condición Control (Individuo sano):**
+Multiplicando por $R_1(Ls+R_2)$ y agrupando términos:
 
-$$
-G_{\text{control}}(s) = \frac{0.1s + 100\,000}{0.0001s^2 + 100.1s + 101\,000}
-$$
+$$V_e(s)\,(Ls+R_2)=V_s(s)\Big[R_1Cs(Ls+R_2)+R_1+(Ls+R_2)\Big],$$
 
-- **Condición Caso (Paciente):**
+$$\boxed{G(s)=\frac{V_s(s)}{V_e(s)}=\frac{Ls+R_2}{R_1LC\,s^2+(R_1R_2C+L)\,s+(R_1+R_2)}.}$$
 
-$$
-G_{\text{caso}}(s) = \frac{0.1s + 1\,000}{0.1s^2 + 1000.1s + 2\,000}
-$$
+El denominador es un polinomio de **segundo orden** porque el circuito contiene dos elementos de almacenamiento independientes: $C$ y $L$.
 
-### 3. Representación en variables de estado (EDO de primer orden)
+### 4. Funciones de transferencia de control y caso
 
-Definiendo como variables de estado la energía almacenada en el capacitor $x_1(t) = V_s(t)$ y en el inductor $x_2(t) = F_s(t)$:
+Sustituyendo $R_1=1\,\mathrm{k\Omega}$ y $L=0.1\,\mathrm{H}$ (con $C$ en farads y $R_2$ en ohmios):
 
-$$
-\begin{aligned}
-\dot{x}_1(t) &= -\frac{1}{R_1 C}x_1(t) - \frac{1}{C}x_2(t) + \frac{1}{R_1 C}V_e(t), \\
-\dot{x}_2(t) &= \frac{1}{L}x_1(t) - \frac{R_2}{L}x_2(t), \\
-y(t) &= x_1(t).
-\end{aligned}
-$$
+$$\boxed{G_{\text{control}}(s)=\frac{0.1\,s+100\,000}{0.0001\,s^2+100.1\,s+101\,000}}\qquad(C=1\,\mu\mathrm{F},\;R_2=100\,\mathrm{k\Omega})$$
+
+$$\boxed{G_{\text{caso}}(s)=\frac{0.1\,s+1\,000}{0.1\,s^2+1\,000.1\,s+2\,000}}\qquad(C=1000\,\mu\mathrm{F},\;R_2=1\,\mathrm{k\Omega})$$
+
+Coeficientes del caso: $R_1LC=1000\cdot0.1\cdot10^{-3}=0.1$; $R_1R_2C+L=1000\cdot1000\cdot10^{-3}+0.1=1000.1$; $R_1+R_2=2000$.
+
+> **Nota de verificación:** en el desarrollo manual (`analisis_matematico.pdf`, página 2) el coeficiente de $s$ del caso aparece escrito como $100.1$; el valor correcto es **$1000.1$**, que es el que se utiliza en el cálculo de polos de la página 3 y en este documento.
 
 [Volver al contenido](#contenido)
 
@@ -231,49 +231,59 @@ $$
 
 ### 1. Error en estado estacionario
 
-Para una entrada escalón unitario $V_e(s) = \frac{1}{s}$, el error en Laplace es $E(s) = [1 - G(s)]V_e(s)$. Aplicando el teorema del valor final:
+Para la entrada escalón unitario $V_e(s)=1/s$, el error es $E(s)=V_e(s)-V_s(s)=\big[1-G(s)\big]V_e(s)$. Por el teorema del valor final:
 
-$$
-e_{ss} = \lim_{s \to 0} s E(s) = 1 - G(0) = 1 - \frac{R_2}{R_1 + R_2}.
-$$
+$$e_{ss}=\lim_{s\to0}sE(s)=1-G(0)=1-\frac{R_2}{R_1+R_2}=\frac{R_1}{R_1+R_2}.$$
 
-Evaluando ambas condiciones en lazo abierto:
+| Condición | $G(0)=V_s(\infty)$ | $e_{ss}$ |
+|---|---:|---:|
+| Control | $\dfrac{100\,000}{101\,000}=0.990099$ | $0.009901\;(0.99\,\%)$ |
+| Caso | $\dfrac{1000}{2000}=0.5$ | $0.5\;(50\,\%)$ |
 
-- **Control:**
+**Distinción importante:** este $e_{ss}$ mide el seguimiento del escalón unitario por cada sistema por separado. El error que alimenta al PID es distinto: $e(t)=V_{s,\text{control}}(t)-V_{s,\text{caso}}(t)$, y su valor final sin controlador es:
 
-$$
-V_{s,\text{control}}(\infty) = \frac{100\,000}{1\,000 + 100\,000} \approx 0.9901\,\mathrm{V} \implies e_{ss,\text{control}} = 1 - 0.9901 = 0.0099\;(0.99\%).
-$$
+$$e(\infty)=0.990099-0.5=0.490099.$$
 
-- **Caso:**
-
-$$
-V_{s,\text{caso}}(\infty) = \frac{1\,000}{1\,000 + 1\,000} = 0.5000\,\mathrm{V} \implies e_{ss,\text{caso}} = 1 - 0.5000 = 0.5000\;(50.0\%).
-$$
-
-- **Brecha estacionaria entre Control y Caso:**
-
-$$
-e(\infty) = V_{s,\text{control}}(\infty) - V_{s,\text{caso}}(\infty) = 0.990099 - 0.5000 = 0.490099\,\mathrm{V}.
-$$
+> **Nota de verificación:** en el desarrollo manual (página 3) esta resta aparece como $0.498099$; el resultado correcto es **$0.490099$**.
 
 ### 2. Polos y estabilidad
 
-Las raíces de la ecuación característica $R_1 L C s^2 + (L + R_1 R_2 C)s + (R_1 + R_2) = 0$ determinan la estabilidad y velocidad de respuesta:
+Los polos son las raíces de $R_1LC\,s^2+(R_1R_2C+L)\,s+(R_1+R_2)=0$:
 
-| Condición | Ecuación característica | Polos ($s_{1,2}$) | Clasificación dinámica |
+$$s_{1,2}=\frac{-(R_1R_2C+L)\pm\sqrt{(R_1R_2C+L)^2-4R_1LC(R_1+R_2)}}{2R_1LC}.$$
+
+| Magnitud | Control | Caso |
+|---|---:|---:|
+| Polo $s_1$ (rad/s) | $-1010.0101$ | $-2.0002$ |
+| Polo $s_2$ (rad/s) | $-999\,989.9899$ | $-9998.9998$ |
+| Cero $z=-R_2/L$ (rad/s) | $-1\,000\,000$ | $-10\,000$ |
+| Constante de tiempo dominante $\tau=1/\lvert s_1\rvert$ | 0.990 ms | 0.4999 s |
+| $\omega_n=\sqrt{(R_1+R_2)/(R_1LC)}$ (rad/s) | 31 780 | 141.42 |
+| $\zeta=\dfrac{R_1R_2C+L}{2\sqrt{R_1LC(R_1+R_2)}}$ | 15.75 | 35.36 |
+
+Ambos sistemas tienen **polos reales, distintos y en el semiplano izquierdo**, por lo que son **asintóticamente estables** y **sobreamortiguados** ($\zeta>1$). En ambos casos el cero queda prácticamente superpuesto con el polo rápido (control: $-10^6$ frente a $-999\,990$; caso: $-10\,000$ frente a $-9999$), de modo que cada respuesta se comporta, en la práctica, como un sistema de **primer orden** gobernado por su polo dominante.
+
+**Efecto de $R_2$ y $C$:** el aumento de $C$ (1 µF → 1000 µF) y la disminución de $R_2$ desplazan el polo dominante de $-1010$ a $-2.0$ rad/s. La respuesta del caso es unas 500 veces más lenta que la del control y se estabiliza en un valor menor.
+
+### 3. Bosquejo cualitativo de las respuestas al escalón
+
+| Condición | Valor final | Rapidez | Forma |
 |---|---|---|---|
-| **Control** | $0.0001s^2 + 100.1s + 101\,000 = 0$ | $s_1 = -1010.0101$, $s_2 = -999\,989.9899$ | Estable, sobreamortiguado (respuesta ultrarrápida) |
-| **Caso** | $0.1s^2 + 1000.1s + 2\,000 = 0$ | $s_1 = -2.0002$, $s_2 = -9998.9998$ | Estable, sobreamortiguado (polo dominante lento $\tau \approx 0.5\,\mathrm{s}$) |
+| Control | $\approx0.99$ | Muy rápida (milisegundos) | Crecimiento exponencial sin sobreimpulso |
+| Caso | $0.5$ | Lenta (orden de segundos) | Crecimiento exponencial sin sobreimpulso |
 
-Ambos sistemas son **asintóticamente estables** al tener todos sus polos reales y negativos en el semiplano izquierdo. El incremento de $1000\times$ en $C$ desplaza el polo dominante desde $s_1 = -1010.01$ hasta $s_1 = -2.0002$, volviendo la respuesta transitoria del paciente aproximadamente $500$ veces más lenta.
+Los bosquejos manuales realizados antes de simular se encuentran en la página 4 de [`analisis_matematico.pdf`](analisis_matematico.pdf).
 
-### 3. Bosquejo cualitativo previo
+### 4. Predicciones analíticas
 
-De acuerdo con la localización de los polos y el valor final calculado en [`analisis_matematico.pdf`](analisis_matematico.pdf):
+Las siguientes cifras se obtuvieron de las funciones de transferencia anteriores (cálculo numérico de la respuesta al escalón) y son **predicciones**, no mediciones de simulación ni de laboratorio:
 
-- **Control:** crecimiento exponencial monótono sin sobreimpulso desde $0\,\mathrm{V}$ hasta estabilizarse prácticamente en $1\,\mathrm{V}$ ($0.9901\,\mathrm{V}$) en pocos milisegundos.
-- **Caso:** crecimiento exponencial monótono mucho más lento desde $0\,\mathrm{V}$ hasta estabilizarse en $0.5\,\mathrm{V}$ alrededor de $t \approx 2\,\mathrm{s}$ ($4\tau \approx 2\,\mathrm{s}$).
+| Magnitud | Control | Caso |
+|---|---:|---:|
+| Valor final $V_s(\infty)$ | 0.9901 | 0.5000 |
+| Tiempo de establecimiento al 2 % (aprox.) | 3.9 ms | 1.96 s |
+| Tiempo de subida 10–90 % (aprox.) | 2.2 ms | 1.10 s |
+| Sobreimpulso | 0 % | 0 % |
 
 [Volver al contenido](#contenido)
 
@@ -282,15 +292,20 @@ De acuerdo con la localización de los polos y el valor final calculado en [`ana
 <a id="senales"></a>
 ## Señales de entrada y condiciones de simulación
 
-La simulación numérica se ejecuta en el intervalo $0 \le t \le 10\,\mathrm{s}$ bajo condiciones iniciales nulas ($x_0 = 0$).
+La práctica utiliza un **escalón unitario** que representa un estímulo sostenido aplicado al sistema:
 
-| Parámetro | MATLAB / Simulink (`sistema1.slx`) | Python (`Martinez23212806.py`) |
+$$V_e(t)=u(t),\qquad 0\le t\le10\,\mathrm{s}.$$
+
+| Elemento | Configuración o definición | Propósito |
 |---|---|---|
-| Señal de entrada $V_e(t)$ | Escalón unitario $u(t)$ en $t = 0\,\mathrm{s}$ | Vector escalón unitario `u = np.ones(N)` |
-| Intervalo temporal | $t \in [0, 10]\,\mathrm{s}$ | $t \in [0, 10]\,\mathrm{s}$ ($N = 10\,001$ muestras) |
-| Solver / Paso de integración | Solver rígido `ode15s`, paso máximo $\Delta t = 10^{-2}\,\mathrm{s}$ | Paso uniforme $\Delta t = 10^{-3}\,\mathrm{s}$ (`ctrl.forced_response`) |
+| Entrada $V_e(t)$ | Escalón unitario | Representar un estímulo hormonal sostenido |
+| Condición control | $C=1\,\mu\mathrm{F}$, $R_2=100\,\mathrm{k\Omega}$ | Respuesta de referencia |
+| Condición caso | $C=1000\,\mu\mathrm{F}$, $R_2=1\,\mathrm{k\Omega}$ | Condición alterada |
+| Sistema controlado | Caso con PID | Reducir la diferencia respecto al control |
+| Tiempo | 0–10 s | Comparar la evolución temporal |
+| Condiciones iniciales | $V_s(0)=0$, $F_s(0)=0$ | Respuesta forzada |
 
-El uso del solver rígido **`ode15s`** en Simulink es fundamental debido a la amplia separación entre las constantes de tiempo rápidas y lentas de los polos del sistema ($\lambda_2 \approx -10^6$ frente a $\lambda_1 \approx -2$).
+Debido a que el polo más rápido del control está en $-10^6$ rad/s, la configuración del paso máximo del solver debe documentarse junto con las gráficas, pues condiciona la resolución de la respuesta inicial.
 
 [Volver al contenido](#contenido)
 
@@ -299,17 +314,17 @@ El uso del solver rígido **`ode15s`** en Simulink es fundamental debido a la am
 <a id="matlab"></a>
 ## Implementación en MATLAB, Simulink y Simscape
 
-El archivo [`sistema1.slx`](sistema1.slx) contiene los subsistemas **Control** y **Caso**, contrastando tres metodologías equivalentes de modelado:
+Se construyen, para control y caso, las tres representaciones solicitadas:
 
-| Implementación | Bloques en `sistema1.slx` | Señal de salida | Aspecto verificado |
-|---|---|---|---|
-| Ecuaciones integro-diferenciales | Subsistemas `V(t) Control` y `V(t) Caso` (integradores, derivadores, sumadores y ganancias $1/C$, $1/R_1$, $1/R_2$, $L$) | `Vs(t): Control EID` / `VsPID` | Equivalencia directa con las leyes de Kirchhoff |
-| Función de transferencia | Bloques `F(t): Control` y `F(t): Caso` (`TransferFcn`) | `Vsx` / `Vsy` | Dinámica entrada–salida de segundo orden |
-| Circuito equivalente físico | Bloques de **Simscape Electrical** (`Resistor`, `Capacitor`, `Inductor`, `Controlled Voltage Source`, `Voltage Sensor`) | `Vs(t): Control CE` / `Ve` | Concordancia física con los modelos matemáticos |
+| Implementación | Descripción | Aspecto por verificar |
+|---|---|---|
+| Ecuaciones integro-diferenciales, Simulink | Integradores de $V_s$ y $F_s$ con las relaciones de la sección anterior | Consistencia con las ecuaciones de Kirchhoff |
+| Función de transferencia, Simulink | Bloque `Transfer Fcn` con $G_{\text{control}}(s)$ y $G_{\text{caso}}(s)$ | Coeficientes de cada condición |
+| Circuito equivalente, Simscape Electrical | $V_e$, $R_1$, $C$, $L$ y $R_2$ con sensor de voltaje en $V_s$ | Topología y punto de medición |
 
-### Ejecución desde el cuaderno MATLAB
+El modelo de simulación se conserva en [`sistema1.slx`](sistema1.slx) y el cuaderno computacional en [`Martinez23212806.mlx`](Martinez23212806.mlx). El cuaderno ejecuta el modelo de Simulink, extrae las respuestas de control, caso y sistema controlado, y las grafica identificando variables y unidades. Las figuras se guardan en formato PDF ([`grafica_MATLAB.pdf`](grafica_MATLAB.pdf)) y el cuaderno exportado se conserva en [`cuadernillo_MATLAB.pdf`](cuadernillo_MATLAB.pdf).
 
-El cuaderno computacional [`Martinez23212806.mlx`](Martinez23212806.mlx) (exportado en [`cuadernillo_MATLAB.pdf`](cuadernillo_MATLAB.pdf)) ejecuta automáticamente `sistema1.slx`, recupera del *Workspace* las variables `ve`, `Vsx`, `Vsy` y `vsPID` registradas mediante bloques `To Workspace`, y genera la figura comparativa [`grafica_MATLAB.pdf`](grafica_MATLAB.pdf).
+Las tres representaciones deben producir respuestas consistentes bajo las mismas condiciones iniciales y la misma entrada.
 
 [Volver al contenido](#contenido)
 
@@ -318,38 +333,45 @@ El cuaderno computacional [`Martinez23212806.mlx`](Martinez23212806.mlx) (export
 <a id="pid"></a>
 ## Control en lazo cerrado y sintonización PID
 
-### 1. Esquema de control con referencia fisiológica
+### 1. Retroalimentación negativa
 
-A diferencia de un regulador de punto fijo constante, el controlador PID utiliza la respuesta dinámica del individuo sano $V_{s,\text{control}}(t)$ como trayectoria de referencia para corregir la respuesta del paciente:
+El esquema general de la **Figura 5.5** del instructivo utiliza la respuesta del individuo sano como referencia para el caso. La señal de error se define como:
 
-$$
-e(t) = V_{s,\text{control}}(t) - V_{s,\text{PID}}(t).
-$$
+$$\boxed{e(t)=V_{s,\text{control}}(t)-V_{s,\text{caso}}(t).}$$
 
-La ley de control en el dominio de Laplace está dada por:
+La ley de control PID ideal y su función de transferencia son:
 
-$$
-K(s) = k_P + \frac{k_I}{s} + k_D s.
-$$
+$$u(t)=k_Pe(t)+k_I\int_0^te(\tau)\,d\tau+k_D\frac{de(t)}{dt},\qquad K(s)=k_P+\frac{k_I}{s}+k_Ds.$$
 
-### 2. Ganancias sintonizadas
+El controlador produce la señal de tratamiento que se aplica al caso para aproximar su respuesta a la del control. La estructura exacta del lazo debe verificarse en [`sistema1.slx`](sistema1.slx).
 
-Mediante la herramienta **PID Tuner** de Simulink (evidencia resguardada en [`controlador_PID.png`](controlador_PID.png)) y su validación en Python, se obtuvieron los siguientes conjuntos de parámetros que logran el seguimiento de trayectoria con sobreimpulso mínimo y error estacionario nulo:
+### 2. Sintonización del controlador
 
-| Entorno de simulación | $k_P$ | $k_I$ | $k_D$ | Observaciones de implementación |
-|---|---:|---:|---:|---|
-| **Simulink (`sistema1.slx`)** | $1292.1889$ | $309\,191.9526$ | $0.17968$ | PID paralelo continuo con filtro derivativo $N = 4938.6985$ |
-| **Python (`Martinez23212806.py`)** | $13\,209.9564$ | $32\,316\,525.9285$ | $0.18118$ | Implementación ideal de función de transferencia $K(s)$ |
+Se utiliza la herramienta **Tune** del bloque `PID Controller` de Simulink buscando una respuesta estable y una reducción del error entre el caso y el control.
 
-### 3. Síntesis del controlador analógico
+| Ganancia | Valor obtenido |
+|---|---|
+| $k_P$ | Por registrar |
+| $k_I$ | Por registrar |
+| $k_D$ | Por registrar |
 
-Para la implementación física del controlador mediante amplificadores operacionales, se fija un capacitor de referencia $C_r = 1\,\mu\mathrm{F}$ y se determinan los componentes pasivos mediante las relaciones de diseño:
+Los criterios de evaluación del instructivo son **estabilidad** y **reducción de la diferencia** entre caso y control; no se especifican valores numéricos obligatorios de tiempo de establecimiento ni sobreimpulso.
 
-$$
-R_e = \frac{1}{C_r k_I}, \qquad R_r = k_P R_e, \qquad C_e = \frac{k_D}{R_r}.
-$$
+### 3. Comparación de lazo cerrado
 
-> **Nota sobre la topología analógica:** la función de transferencia de una red PID con amplificadores operacionales responde a $K(s) = \frac{(R_e C_e s + 1)(R_r C_r s + 1)}{R_e C_r s}$, cuyo término proporcional efectivo incluye la contribución $\frac{R_r}{R_e} + \frac{C_e}{C_r}$. Al seleccionar valores comerciales estándar, debe verificarse su respuesta en Simscape Electrical antes del montaje físico.
+Se repite la simulación con el escalón unitario y se comparan $V_{s,\text{control}}(t)$, $V_{s,\text{caso}}(t)$ y $V_{s,\text{PID}}(t)$, analizando el error, la rapidez de respuesta, el comportamiento transitorio y el estado estacionario. Los parámetros y las condiciones iniciales se mantienen constantes al contrastar modelos.
+
+### 4. Controlador analógico
+
+Las ganancias $k_P$, $k_I$ y $k_D$ se utilizan como especificaciones para calcular las resistencias y capacitores de un PID con amplificadores operacionales, seleccionando valores comerciales. El controlador se construye primero en Simscape Electrical y su respuesta se compara con la del bloque ideal `PID Controller`.
+
+| Elemento del controlador analógico | Valor comercial |
+|---|---|
+| Resistencias | Por registrar |
+| Capacitores | Por registrar |
+| Alimentación simétrica de los amplificadores | Por registrar |
+
+> El diseño del PID se realiza exclusivamente con fines académicos y de simulación y no constituye una propuesta de tratamiento clínico.
 
 [Volver al contenido](#contenido)
 
@@ -358,32 +380,76 @@ $$
 <a id="python"></a>
 ## Reproducción en Python
 
-El script [`Martinez23212806.py`](Martinez23212806.py), desarrollado en **Visual Studio Code** con las bibliotecas `numpy`, `control` y `matplotlib`, reproduce de forma independiente el modelado y control del sistema:
+La implementación en **Python**, mediante **Visual Studio Code**, permite contrastar la simulación con una herramienta independiente. El procedimiento incluye:
 
-1. **Definición del vector temporal:** $t \in [0, 10]\,\mathrm{s}$ con paso $\Delta t = 10^{-3}\,\mathrm{s}$ y entrada escalón unitario.
-2. **Construcción de plantas:** función `sis(C, R2, nombre)` que define `sysControl` y `sysCaso` mediante `ctrl.tf(num, den)`.
-3. **Síntesis del controlador PID:** cálculo de $R_e, R_r, C_e$ a partir de $k_P, k_I, k_D$ y definición de `PID = ctrl.tf(numPID, denPID)`.
-4. **Lazo cerrado:** interconexión en serie `ctrl.series(PID, sysCaso)` con retroalimentación negativa unitaria `ctrl.feedback(..., 1, sign=-1)`.
-5. **Simulación forzada:** evaluación mediante `ctrl.forced_response`, aplicando la salida `Control` como señal de referencia para el sistema `sysPID`.
-6. **Exportación gráfica:** generación de la comparativa en [`grafica_PYTHON.png`](grafica_PYTHON.png).
+1. Definición del vector de tiempo entre 0 y 10 s.
+2. Definición de las funciones de transferencia $G_{\text{control}}(s)$ y $G_{\text{caso}}(s)$.
+3. Cálculo de los polos de ambos modelos.
+4. Obtención de la respuesta al escalón unitario de control y caso.
+5. Incorporación de las ganancias $k_P$, $k_I$ y $k_D$ obtenidas con **Tune**.
+6. Construcción del sistema del caso en lazo cerrado conforme al diagrama de Simulink.
+7. Generación y almacenamiento de las figuras comparativas con MATLAB/Simulink.
+
+La implementación se conserva en [`Martinez23212806.py`](Martinez23212806.py) y la figura generada en [`grafica_PYTHON.png`](grafica_PYTHON.png). Deben especificarse las bibliotecas importadas por el script y verificarse la correspondencia de sus resultados con MATLAB/Simulink.
+
+[Volver al contenido](#contenido)
+
+---
+
+<a id="biologico"></a>
+## Diagrama biológico e interpretación fisiológica
+
+El diagrama relaciona los elementos del circuito con estructuras y procesos del sistema endócrino. Se elaboró con **BioRender**.
+
+![Diagrama biológico del sistema endócrino con su analogía eléctrica](biorender.png)
+
+*Figura: correspondencia entre los elementos del circuito equivalente y el sistema endócrino. Elaborado en BioRender.*
+
+| Elemento del modelo | Elemento biológico o interpretación en el diagrama |
+|---|---|
+| $V_e(t)$ | Secreción de hormonas en la glándula endócrina |
+| $F_e(t)$ | Flujo de la señal hormonal desde la glándula hacia el compartimento de almacenamiento |
+| $R_1$ | Pérdidas de transporte |
+| $C$ | Almacenamiento de T3/T4 en la tiroides |
+| $L$ | Resistencia dinámica a cambios rápidos en la respuesta (asociada en la figura al páncreas) |
+| $R_2$ | Oposición asociada al consumo o degradación hormonal (receptores de los huesos) |
+| $V_s(t)$ | Salida normalizada de la señal hacia el tejido receptor |
+| Respuesta metabólica | Efecto final de la señal hormonal disponible |
+
+### Alcance fisiológico
+
+El diagrama es una **representación ilustrativa**: las estructuras anatómicas (tiroides, páncreas, riñón, hueso) se utilizan para dar contexto fisiológico a cada elemento del circuito y no implican que cada componente eléctrico corresponda a un órgano concreto. El riñón aparece en la figura como parte del contexto anatómico, sin un parámetro eléctrico asignado.
 
 [Volver al contenido](#contenido)
 
 ---
 
 <a id="laboratorio"></a>
-## Controlador analógico y laboratorio
+## Implementación experimental en el laboratorio
 
-### Materiales y equipo
+Debido a que los valores seleccionados corresponden a componentes comerciales, los circuitos se construyen en el Laboratorio de Electrónica para contrastar las respuestas simuladas con las experimentales.
 
-- **Planta pasiva (Control y Caso):** resistores de $1\,\mathrm{k}\Omega$ y $100\,\mathrm{k}\Omega$, inductor de $100\,\mathrm{mH}$, capacitores de $1\,\mu\mathrm{F}$ y $1000\,\mu\mathrm{F}$, protoboard y cables de conexión.
-- **Controlador analógico:** amplificadores operacionales alimentados con fuente simétrica $V_{CC} = +15\,\mathrm{V}$ y $V_{EE} = -15\,\mathrm{V}$, junto con resistores y capacitores de valores comerciales.
-- **Instrumentación:** generador de funciones (configurado con onda cuadrada/pulso de baja frecuencia y offset DC para aproximar el escalón unitario de $0\,\mathrm{V}$ a $1\,\mathrm{V}$), fuente de alimentación DC simétrica, multímetro digital y osciloscopio.
+### Lazo abierto
 
-### Procedimiento experimental
+1. Construir en protoboard los circuitos de control y caso con los valores de la tabla de parámetros.
+2. Configurar el generador de funciones para producir una aproximación experimental al escalón unitario.
+3. Registrar simultáneamente $V_e(t)$ y $V_s(t)$ con el osciloscopio y guardar las capturas.
 
-1. **Lazo abierto:** montaje en protoboard de las topologías **Control** y **Caso**, aplicando la aproximación experimental al escalón unitario y midiendo simultáneamente $V_e(t)$ y $V_s(t)$.
-2. **Lazo cerrado:** acoplamiento del controlador PID analógico con la planta **Caso**, suministrando como referencia la señal de control y registrando la respuesta corregida $V_{s,\text{PID}}(t)$ en [`grafica_LABORATORIO.jpeg`](grafica_LABORATORIO.jpeg).
+### Lazo cerrado
+
+1. Construir el controlador analógico y conectarlo al circuito del caso.
+2. Configurar la alimentación simétrica de los amplificadores operacionales según las especificaciones del laboratorio.
+3. Aplicar de nuevo la señal de entrada y registrar las respuestas en lazo abierto y lazo cerrado.
+
+### Fuentes de diferencia entre simulación y experimento
+
+- Tolerancias de resistores, capacitores e inductores.
+- Resistencia interna y comportamiento no ideal del inductor.
+- Tolerancia y resistencia serie equivalente del capacitor.
+- Valores comerciales utilizados para implementar el controlador.
+- Características no ideales de los amplificadores operacionales.
+- Limitaciones de los instrumentos de medición.
+- Aproximación experimental utilizada para generar el escalón.
 
 [Volver al contenido](#contenido)
 
@@ -392,21 +458,44 @@ El script [`Martinez23212806.py`](Martinez23212806.py), desarrollado en **Visual
 <a id="resultados"></a>
 ## Resultados y verificación cruzada
 
-### Evidencias gráficas del repositorio
+Las respuestas permiten contrastar **entrada, control, caso y sistema controlado** ante el mismo escalón.
 
-| Herramienta / Etapa | Archivo generado | Descripción de la evidencia |
+### Señales presentadas
+
+| Señal | Variable | Interpretación |
 |---|---|---|
-| **MATLAB / Simulink** | [`grafica_MATLAB.pdf`](grafica_MATLAB.pdf) | Comparación de $V_e(t)$, $V_{s,\text{control}}(t)$, $V_{s,\text{caso}}(t)$ y $V_{s,\text{PID}}(t)$ desde `Martinez23212806.mlx` |
-| **Python** | [`grafica_PYTHON.png`](grafica_PYTHON.png) | Simulación independiente de las respuestas en lazo abierto y lazo cerrado con PID |
-| **Sintonización PID** | [`controlador_PID.png`](controlador_PID.png) | Captura de sintonización del bloque `PID Controller` en Simulink |
-| **Laboratorio** | [`grafica_LABORATORIO.jpeg`](grafica_LABORATORIO.jpeg) | Captura experimental obtenida en el osciloscopio del montaje físico |
+| Entrada | $V_e(t)$ | Escalón unitario |
+| Control | $V_{s,\text{control}}(t)$ | Respuesta de referencia |
+| Caso | $V_{s,\text{caso}}(t)$ | Respuesta de la condición alterada en lazo abierto |
+| Sistema controlado | $V_{s,\text{PID}}(t)$ | Respuesta del caso con controlador |
 
-### Discusión de resultados
+### Archivos y evidencias del repositorio
 
-- **Concordancia *in silico*:** las tres implementaciones en `sistema1.slx` (ecuaciones integro-diferenciales, función de transferencia y circuito Simscape Electrical) y el script en Python (`Martinez23212806.py`) producen curvas superpuestas, validando la exactitud del modelo matemático.
-- **Comparación Control vs. Caso:** en lazo abierto, la condición **Control** alcanza $0.9901\,\mathrm{V}$ de forma casi instantánea, mientras que la condición **Caso** presenta un retardo pronunciado y se estanca en $0.5000\,\mathrm{V}$ ($50\%$ de error estacionario).
-- **Desempeño del controlador PID:** al cerrar el lazo utilizando $V_{s,\text{control}}(t)$ como referencia, la salida controlada $V_{s,\text{PID}}(t)$ elimina el error en estado estacionario y reproduce la dinámica rápida del individuo sano.
-- **Discrepancias experimentales:** las ligeras variaciones observadas en la captura del osciloscopio respecto a las curvas ideales se atribuyen a la resistencia serie equivalente (ESR) del inductor real de $100\,\mathrm{mH}$, las tolerancias de los capacitores electrolíticos ($1000\,\mu\mathrm{F}$) y resistores ($\pm 5\%$), la aproximación a valores comerciales en el controlador analógico y las características no ideales de los amplificadores operacionales.
+| Representación | Archivo | Contenido |
+|---|---|---|
+| Análisis matemático | [`analisis_matematico.pdf`](analisis_matematico.pdf) | Desarrollo manual: función de transferencia, estabilidad, error, ecuaciones integro-diferenciales y bosquejos |
+| Simulink y Simscape | [`sistema1.slx`](sistema1.slx) | Modelo de simulación |
+| Cuaderno MATLAB | [`Martinez23212806.mlx`](Martinez23212806.mlx) | Ejecución y análisis computacional |
+| Cuaderno exportado | [`cuadernillo_MATLAB.pdf`](cuadernillo_MATLAB.pdf) | Evidencia del cuaderno |
+| Resultados MATLAB | [`grafica_MATLAB.pdf`](grafica_MATLAB.pdf) | Gráficas de MATLAB |
+| Código Python | [`Martinez23212806.py`](Martinez23212806.py) | Implementación en Python |
+| Resultados Python | [`grafica_PYTHON.png`](grafica_PYTHON.png) | Gráfica de Python |
+| Resultados de laboratorio | [`grafica_LABORATORIO.jpeg`](grafica_LABORATORIO.jpeg) | Respuestas experimentales |
+| Control PID | [`controlador_PID.png`](controlador_PID.png) | Evidencia del controlador |
+| Diagrama biológico | [`biorender.png`](biorender.png) | Correspondencia con el sistema fisiológico |
+| Citación | [`CITATION.cff`](CITATION.cff) | Información del alumno y del repositorio |
+| Licencia | [`LICENSE`](LICENSE) | Licencia del repositorio |
+
+### Aspectos para discutir
+
+- Concordancia entre ecuaciones integro-diferenciales, función de transferencia y Simscape Electrical.
+- Diferencia entre control y caso: valor final (0.99 frente a 0.5) y rapidez (polo dominante de $-1010$ frente a $-2.0$ rad/s).
+- Efecto de modificar $C$ y $R_2$ sobre la posición de los polos.
+- Cambios en error, rapidez y comportamiento transitorio después del PID.
+- Correspondencia entre las gráficas de MATLAB y Python bajo parámetros idénticos.
+- Diferencias entre simulación y laboratorio atribuibles a la no idealidad de los componentes y de los instrumentos.
+
+**Resultados del estudiante:** las ganancias sintonizadas, los componentes del controlador analógico y las conclusiones cuantitativas se incorporan a partir de ejecuciones verificables. No se inventan resultados de simulación ni de laboratorio.
 
 [Volver al contenido](#contenido)
 
@@ -417,35 +506,35 @@ El script [`Martinez23212806.py`](Martinez23212806.py), desarrollado en **Visual
 
 ```mermaid
 flowchart TD
-    A[Modelo simplificado del sistema endocrino] --> B[Analogia electrica RLC mixta]
-    A --> C[Diagrama biologico BioRender]
-    B --> D[Leyes de Kirchhoff y Laplace]
-    B --> E[Simscape Electrical: circuito]
-    D --> F[Funcion de transferencia]
-    D --> G[Ecuaciones integro-diferenciales y EDO]
-    F --> H[Polos, estabilidad y error]
-    F --> I[Simulink: funcion de transferencia]
-    G --> J[Simulink: ecuaciones]
-    I --> K[Respuestas Control y Caso]
+    A[Descripcion fisiologica del sistema endocrino] --> B[Circuito equivalente RLC de segundo orden]
+    B --> C[Leyes de Kirchhoff]
+    C --> D[Ecuaciones integro-diferenciales]
+    C --> E[Funcion de transferencia]
+    E --> F[Polos, estabilidad y error]
+    F --> G[Bosquejo de respuesta al escalon]
+    D --> H[Simulink: ecuaciones]
+    E --> I[Simulink: funcion de transferencia]
+    B --> J[Simscape Electrical: circuito]
+    H --> K[Respuestas control y caso]
+    I --> K
     J --> K
-    E --> K
     K --> L[Error entre control y caso]
     L --> M[Control PID y sintonizacion Tune]
-    M --> N[Respuesta controlada]
-    F --> O[Python: simulacion independiente]
-    N --> O
-    M --> P[Diseno de controlador analogico]
-    B --> Q[Montaje Control y Caso en laboratorio]
-    P --> R[Montaje experimental en lazo cerrado]
-    Q --> S[Capturas de osciloscopio]
+    M --> N[Controlador analogico con amplificadores operacionales]
+    E --> O[Python: simulacion independiente]
+    M --> O
+    B --> P[Protoboard: control y caso]
+    N --> P
+    P --> Q[Osciloscopio: lazo abierto y cerrado]
+    A --> R[Diagrama biologico]
+    K --> S[Verificacion cruzada]
+    O --> S
+    Q --> S
     R --> S
-    O --> T[Verificacion cruzada]
-    N --> T
-    K --> T
-    S --> T
-    C --> T
-    T --> U[README, figuras y evidencias en GitHub]
+    S --> T[README, figuras y evidencias en GitHub]
 ```
+
+El procedimiento articula **interpretación fisiológica, formulación analítica, simulación, control, implementación analógica, experimentación y documentación académica**.
 
 [Volver al contenido](#contenido)
 
@@ -454,16 +543,41 @@ flowchart TD
 <a id="actividades"></a>
 ## Actividades del estudiante
 
-- [x] Proponer el circuito eléctrico equivalente identificando $V_e(t)$, $V_s(t)$, $F_e(t)$, $F_s(t)$, $R_1$, $C$, $L$ y $R_2$.
-- [x] Elaborar el diagrama biológico relacionando los procesos endocrinos con el circuito equivalente ([`biorender.png`](biorender.png)).
-- [x] Derivar las ecuaciones integro-diferenciales, funciones de transferencia y representación en EDO ([`analisis_matematico.pdf`](analisis_matematico.pdf)).
-- [x] Calcular los polos, analizar la estabilidad, determinar el error en estado estacionario y trazar el bosquejo cualitativo.
-- [x] Implementar y contrastar ecuaciones integro-diferenciales, función de transferencia y circuito en Simscape Electrical ([`sistema1.slx`](sistema1.slx)).
-- [x] Diseñar el sistema en lazo cerrado utilizando la respuesta **Control** como referencia y sintonizar el PID ([`controlador_PID.png`](controlador_PID.png)).
-- [x] Desarrollar el cuaderno computacional en MATLAB ([`Martinez23212806.mlx`](Martinez23212806.mlx)) y exportar [`cuadernillo_MATLAB.pdf`](cuadernillo_MATLAB.pdf) y [`grafica_MATLAB.pdf`](grafica_MATLAB.pdf).
-- [x] Reproducir las simulaciones en Python ([`Martinez23212806.py`](Martinez23212806.py)) y generar [`grafica_PYTHON.png`](grafica_PYTHON.png).
-- [x] Construir el circuito y controlador analógico en laboratorio y registrar [`grafica_LABORATORIO.jpeg`](grafica_LABORATORIO.jpeg).
-- [x] Integrar documentación técnica en `README.md` y archivo de citación `CITATION.cff`.
+La práctica sigue una secuencia de **construcción, formulación, simulación, control, verificación experimental y documentación**.
+
+### Etapa 1. Formulación y análisis
+
+- [ ] Construir el circuito equivalente identificando $V_e(t)$, $V_s(t)$, $R_1$, $C$, $L$, $R_2$, $F_e(t)$, $F_s(t)$, nodos y referencia.
+- [ ] Obtener $G_{\text{control}}(s)$ y $G_{\text{caso}}(s)$ y relacionar su orden con $C$ y $L$.
+- [ ] Calcular el error en estado estacionario de control y caso.
+- [ ] Calcular los polos y analizar la estabilidad de ambos sistemas.
+- [ ] Bosquejar las respuestas al escalón.
+- [ ] Formular el modelo con ecuaciones integro-diferenciales.
+
+### Etapa 2. Simulación de la planta
+
+- [ ] Implementar el modelo de ecuaciones integro-diferenciales en Simulink.
+- [ ] Implementar la función de transferencia en Simulink.
+- [ ] Implementar el circuito equivalente en Simscape Electrical.
+- [ ] Verificar la consistencia de las tres representaciones.
+- [ ] Comparar las respuestas al escalón en $0\le t\le10$ s.
+
+### Etapa 3. Diseño y comprobación del controlador
+
+- [ ] Construir el sistema de lazo cerrado con la respuesta del control como referencia.
+- [ ] Incorporar el bloque `PID Controller` y sintonizar $k_P$, $k_I$ y $k_D$ con **Tune**.
+- [ ] Analizar la respuesta en lazo cerrado.
+- [ ] Ejecutar el cuaderno de MATLAB y guardar las gráficas en PDF.
+- [ ] Reproducir la implementación y las figuras en Python.
+- [ ] Diseñar el controlador analógico y compararlo con el bloque ideal.
+
+### Etapa 4. Verificación experimental y documentación
+
+- [ ] Construir y medir los circuitos de control y caso en lazo abierto.
+- [ ] Construir y medir el controlador analógico en lazo cerrado.
+- [ ] Comparar simulación y experimentación.
+- [ ] Elaborar el diagrama biológico.
+- [ ] Organizar el repositorio, `README.md` y `CITATION.cff`.
 
 [Volver al contenido](#contenido)
 
@@ -472,21 +586,26 @@ flowchart TD
 <a id="estructura"></a>
 ## Estructura del repositorio
 
+La estructura corresponde a los **nombres exactos de los archivos cargados en GitHub**:
+
 ```text
 .
-├── README.md                      # Reporte técnico y guía de reproducción de la práctica
-├── CITATION.cff                   # Metadatos de citación del repositorio
-├── Martinez23212806.mlx           # Cuaderno computacional en MATLAB
-├── cuadernillo_MATLAB.pdf         # Exportación en PDF del cuaderno MATLAB
-├── sistema1.slx                   # Modelo en Simulink y Simscape Electrical
-├── Martinez23212806.py            # Script de simulación y control en Python
-├── analisis_matematico.pdf        # Desarrollo analítico, polos, error y bosquejos
-├── biorender.png                  # Esquema biológico del sistema endocrino
-├── controlador_PID.png            # Evidencia de sintonización del bloque PID Controller
-├── grafica_MATLAB.pdf             # Gráfica comparativa generada desde MATLAB
-├── grafica_PYTHON.png             # Gráfica comparativa generada desde Python
-└── grafica_LABORATORIO.jpeg       # Captura experimental del osciloscopio
+├── CITATION.cff
+├── LICENSE
+├── Martinez23212806.mlx
+├── Martinez23212806.py
+├── README.md
+├── analisis_matematico.pdf
+├── biorender.png
+├── controlador_PID.png
+├── cuadernillo_MATLAB.pdf
+├── grafica_LABORATORIO.jpeg
+├── grafica_MATLAB.pdf
+├── grafica_PYTHON.png
+└── sistema1.slx
 ```
+
+**Criterio de nombres:** las rutas y las mayúsculas/minúsculas se conservan tal como aparecen en el repositorio.
 
 [Volver al contenido](#contenido)
 
@@ -497,19 +616,19 @@ flowchart TD
 
 ### Software
 
-- **MATLAB** y **Simulink** (con **Control System Toolbox** y **Simscape Electrical**).
-- **Python 3.x** ejecutado en **Visual Studio Code**, con las siguientes dependencias:
+- **MATLAB** para la ejecución del cuaderno `.mlx`, análisis de señales y exportación de figuras.
+- **Simulink** para implementar ecuaciones, funciones de transferencia y el lazo PID.
+- **Simscape Electrical** para representar el circuito y el controlador analógico.
+- **PID Controller / Tune** para la sintonización de ganancias.
+- **Python** y **Visual Studio Code** para la verificación independiente.
+- **BioRender** o una herramienta equivalente para el diagrama biológico.
+- **Git y GitHub** para documentar y conservar el trabajo.
 
-```bash
-pip install numpy matplotlib scipy control
-```
+Para los cálculos en Python deben instalarse las librerías utilizadas en el script definitivo. El instructivo no especifica versiones mínimas del software.
 
-- **Git y GitHub** para control de versiones y publicación del repositorio.
+### Recursos de laboratorio
 
-### Hardware e instrumentación de laboratorio
-
-- Resistores ($1\,\mathrm{k}\Omega$, $100\,\mathrm{k}\Omega$ y valores comerciales del PID), inductor ($100\,\mathrm{mH}$), capacitores ($1\,\mu\mathrm{F}$, $1000\,\mu\mathrm{F}$ y $C_e, C_r$), amplificadores operacionales, protoboard y cables.
-- Fuente de alimentación DC simétrica ($\pm 15\,\mathrm{V}$), generador de funciones, multímetro digital y osciloscopio.
+Protoboard, resistores, capacitores e inductor con los valores comerciales indicados, amplificadores operacionales con alimentación simétrica, generador de funciones y osciloscopio.
 
 [Volver al contenido](#contenido)
 
@@ -521,38 +640,37 @@ pip install numpy matplotlib scipy control
 ### Secuencia de reproducción
 
 1. Consultar el [repositorio general de la asignatura](https://github.com/DrPaulValle/MSF-IBF1020) y el instructivo de la práctica.
-2. Identificar los procesos hormonales, flujos $F_e(t), F_s(t)$, señales $V_e(t), V_s(t)$ y componentes $R_1, C, L, R_2$.
-3. Construir la analogía eléctrica RLC mixta y desarrollar las ecuaciones integro-diferenciales mediante leyes de Kirchhoff.
-4. Obtener $G(s) = V_s(s)/V_e(s)$ y comprobar el nodo de medición de salida utilizado en Simulink.
-5. Utilizar los parámetros comerciales de referencia: $C = 1\,\mu\mathrm{F}, R_2 = 100\,\mathrm{k}\Omega$ (**Control**) y $C = 1000\,\mu\mathrm{F}, R_2 = 1\,\mathrm{k}\Omega$ (**Caso**), con $R_1 = 1\,\mathrm{k}\Omega$ y $L = 100\,\mathrm{mH}$.
-6. Ejecutar las representaciones por ecuaciones, función de transferencia y Simscape Electrical en [`sistema1.slx`](sistema1.slx).
-7. Calcular polos, estabilidad y error en estado estacionario para cada condición ([`analisis_matematico.pdf`](analisis_matematico.pdf)).
-8. Ejecutar la simulación al escalón unitario en un intervalo de $10\,\mathrm{s}$ con el solver `ode15s` y contrastar las respuestas de Control y Caso.
-9. Sintonizar el PID mediante **Tune** utilizando la respuesta Control como referencia y conservar ganancias y evidencia ([`controlador_PID.png`](controlador_PID.png)).
-10. Ejecutar el cuaderno de MATLAB ([`Martinez23212806.mlx`](Martinez23212806.mlx)) y generar las figuras de las señales ([`grafica_MATLAB.pdf`](grafica_MATLAB.pdf)).
-11. Reproducir las respuestas en Python ([`Martinez23212806.py`](Martinez23212806.py)) bajo las mismas condiciones ([`grafica_PYTHON.png`](grafica_PYTHON.png)).
-12. Elaborar el diagrama biológico ([`biorender.png`](biorender.png)), implementar los circuitos en protoboard ([`grafica_LABORATORIO.jpeg`](grafica_LABORATORIO.jpeg)) y realizar la verificación cruzada.
-13. Publicar el repositorio con `README.md`, las evidencias y `CITATION.cff`.
+2. Construir el circuito equivalente según la descripción fisiológica.
+3. Obtener $G(s)=V_s(s)/V_e(s)$ para control y caso con los valores de la tabla de parámetros.
+4. Calcular polos y error en estado estacionario de cada condición.
+5. Formular el modelo integro-diferencial y comparar con la función de transferencia.
+6. Ejecutar [`sistema1.slx`](sistema1.slx) con un escalón unitario en $0\le t\le10$ s.
+7. Sintonizar el PID mediante **Tune** y conservar ganancias y evidencia.
+8. Ejecutar el cuaderno de MATLAB y generar las figuras.
+9. Ejecutar [`Martinez23212806.py`](Martinez23212806.py) con las mismas condiciones.
+10. Calcular y simular el controlador analógico.
+11. Construir los circuitos en el laboratorio y registrar las capturas del osciloscopio.
+12. Comparar simulación y experimentación y publicar el repositorio con `README.md` y `CITATION.cff`.
 
 ### Resultados mínimos esperados
 
 | Entregable | Evidencia solicitada |
 |---|---|
-| Identificación del modelo | Estímulo, nivel hormonal, flujos, almacenamiento, inercia y utilización |
-| Analogía eléctrica | Esquema y correspondencia entre variables endocrinas y circuito RLC mixto |
-| Formulación matemática | Ecuaciones integro-diferenciales, variables de estado y función de transferencia |
-| Análisis del sistema | Polos, estabilidad, error estacionario y bosquejos de Control y Caso |
-| Simulink y Simscape | Representaciones equivalentes y respuestas al escalón en [`sistema1.slx`](sistema1.slx) |
-| PID | Ganancias obtenidas con **Tune** y comparación en lazo cerrado |
-| MATLAB | Cuaderno `.mlx` ([`Martinez23212806.mlx`](Martinez23212806.mlx)), exportación `.pdf` y gráfica |
-| Python | Código `.py` ([`Martinez23212806.py`](Martinez23212806.py)) y figura comparativa |
-| Laboratorio | Síntesis analógica, montaje físico y captura del osciloscopio |
-| Diagrama biológico | Relación del modelo fisiológico y eléctrico con estructuras endocrinas reales |
-| Documentación | `README.md`, `CITATION.cff`, conclusiones y evidencias |
+| Interpretación fisiológica | Hipótesis y correspondencias de la analogía |
+| Circuito propuesto | Esquema con $V_e$, $V_s$, $R_1$, $C$, $L$, $R_2$, $F_e$, $F_s$ y referencia |
+| Desarrollo matemático | Ecuaciones, funciones de transferencia de control y caso |
+| Análisis del sistema | Polos, estabilidad y error estacionario de control y caso |
+| Simulink y Simscape | Representaciones equivalentes y respuestas al escalón |
+| PID | Ganancias obtenidas con Tune y comparación en lazo cerrado |
+| MATLAB | Cuaderno `.mlx` y gráficas exportadas en PDF |
+| Python | Código `.py` y figuras comparativas |
+| Controlador analógico | Cálculo de componentes y comparación con el PID ideal |
+| Laboratorio | Fotografías de montajes y capturas del osciloscopio |
+| Documentación | `README.md`, `CITATION.cff`, discusión y conclusiones |
 
 ### Criterios de presentación académica
 
-El README final distingue entre **expresiones del instructivo**, **elementos identificados en los archivos aportados**, **predicciones analíticas** y **resultados obtenidos efectivamente de la simulación y experimentación**. Las figuras, ganancias y conclusiones corresponden a ejecuciones verificadas del modelo. Cualquier ajuste en las ganancias del controlador entre el entorno de Simulink (con filtro derivativo $N$) y Python (función de transferencia ideal) queda explícitamente documentado.
+El README distingue entre **expresiones del instructivo**, **cálculos analíticos**, **resultados de simulación** y **resultados experimentales**. Las figuras, ganancias y conclusiones deben corresponder a ejecuciones o mediciones verificables. Si se modifica algún parámetro, el circuito, el PID o el punto de medición, debe quedar documentado.
 
 [Volver al contenido](#contenido)
 
@@ -571,7 +689,7 @@ El README final distingue entre **expresiones del instructivo**, **elementos ide
 
 [5] N. S. Nise, *Control Systems Engineering*, 8th ed., John Wiley & Sons, 2020.
 
-[6] P. A. Valle, *Syllabus para Modelado de Sistemas Fisiológicos*, Tecnológico Nacional de México / Instituto Tecnológico de Tijuana, Tijuana, B.C., México, 2026. Disponible en: https://biomath.xyz/course/
+[6] P. A. Valle, *Syllabus para Modelado de Sistemas Fisiológicos*, Tecnológico Nacional de México / Instituto Tecnológico de Tijuana, Tijuana, B. C., México, 2026. Disponible en: https://biomath.xyz/course/
 
 [7] Tecnológico Nacional de México, *Programa de estudio de la asignatura Modelado de Sistemas Fisiológicos, IBF-1020*.
 
@@ -579,4 +697,4 @@ El README final distingue entre **expresiones del instructivo**, **elementos ide
 
 ## Uso académico
 
-Este repositorio constituye evidencia académica de la **Práctica 4: Modelado y control del sistema endocrino** de la asignatura **Modelado de Sistemas Fisiológicos (`IBF-1020`)** en el Tecnológico Nacional de México / Instituto Tecnológico de Tijuana.
+Este repositorio documenta la **Práctica 4: Modelado y control del sistema endócrino**. El procedimiento se fundamenta en el instructivo de la asignatura y en los archivos de MATLAB/Simulink proporcionados. Su propósito es desarrollar habilidades de interpretación fisiológica, modelado mediante analogías eléctricas, simulación, sintonización de controladores, implementación analógica y verificación experimental. El modelo es fenomenológico, las intervenciones son *in silico* y de laboratorio con circuitos electrónicos, y cualquier cambio de parámetros, estructura o procedimiento debe identificarse y justificarse.
